@@ -23,7 +23,6 @@ public class GithubProvider {
                 .build();
         try (Response response = client.newCall(request).execute()) {
             String string = response.body().string();
-            System.out.println("GithubProvider---->"+string);
             String[] split = string.split("&");
             String[] split1 = split[0].split("=");
             return split1[1];
