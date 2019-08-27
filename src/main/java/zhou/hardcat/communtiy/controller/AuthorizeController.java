@@ -53,7 +53,7 @@ public class AuthorizeController {
             response.addCookie(new Cookie("token",token));
             //登陆成功，写session
             request.getSession().setAttribute("user",user);
-            return "redirect:/";
+            return "publish";
         }else{
             //登陆失败，重新登录
             return "redirect:/";
