@@ -4,80 +4,72 @@
     <title>Getting Started: Serving Web Content</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/community.css"/>
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="/css/community.css">
     <script src="/js/jquery-3.4.1.min.js"></script>
     <script src="/js/bootstrap.js" type="application/javascript"></script>
+    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+    <script type="application/javascript">
+        $(function(){
+            //表单为空提示
+            checkNotNull("#title","标题不能为空！",".warn1");
+            checkNotNull("#description","描述不能为空！",".warn2");
+            checkNotNull("#tag","关键词不能为空！",".warn3");
+            //防止空表单提交
+            $(".publishForm").submit( function () {
+                var title = $("#title").val().trim();
+                var description = $("#description").val().trim();
+                if(title===''){
+                    return false;
+                }
+                if(description===''){
+                    return false;
+                }
+                return true;
+            });
+            //获取标签的值，并判断非空
+            function checkNotNull(tagName,msg,warnName) {
+                 $(tagName).blur(function () {
+                    var tagValue = $(tagName).val().trim();
+                    if(tagValue===""){
+                        var warnStr1='<span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span>';
+                        warnStr1+='<span  class="alert-success" role="alert" >'+msg+'</span>';
+                        $(warnName).html(warnStr1);
+                    }else{
+                        var warnStr2='<span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span>';
+                        warnStr2+='<span class="glyphicon glyphicon-ok" ></span>';
+                        $(warnName).html(warnStr2);
+                    }
+                });
+            }
+        });
+    </script>
 </head>
-<body>
-<nav class="navbar navbar-default ">
-    <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                <span class="sr-only">hardcat社区</span>
-            </button>
-            <a class="navbar-brand" href="#">hardcat社区</a>
-        </div>
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <form class="navbar-form navbar-left">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="搜索相关">
-                </div>
-                <button type="submit" class="btn btn-default">搜索</button>
-            </form>
-            <ul class="nav navbar-nav navbar-right">
-                <li th:if="${session.user==null}">
-                    <a href="https://github.com/login/oauth/authorize?client_id=Iv1.84e6066904412e29&redirect_uri=http://localhost:8887/callback&scope=user&state=1">登录</a>
-                </li>
-                <li class="dropdown" th:if="${session.user!=null}">
-                    <a href="#"
-                       class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false" th:text="${session.user.getName()}"><span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">消息中心</a></li>
-                        <li><a href="#">个人资料</a></li>
-                        <li><a href="#">退出登录</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-
-</nav>
+<body class="total">
+<div th:insert="head :: headcopy"></div>
 <div class="container-fluid main">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
-
-            <form action="/publish" method="post">
+            <h2><span class="glyphicon glyphicon-paperclip" aria-hidden="true">发布</span></h2><hr>
+            <form action="/publish" method="post" class="publishForm">
+                <input type="hidden" id="questionId" name="questionId" th:value="${questionId}">
                 <div class="form-group">
-                    <label for="title">问题标题 （简单扼要）</label>
-                    <input type="text" class="form-control" id="title"  name="title" placeholder="问题标题...">
-                </div>
-                <div class="form-group">
-                    <label for="title">问题补充 （必填，请参照右侧提示）</label>
-                    <textarea name="description"  id="description" col="30" row="10" class="form-control"></textarea>
+                    <label for="title">问题标题 （简单扼要）</label><label class="warn1"></label>
+                    <input type="text" class="form-control" id="title" th:value="${title}" name="title" placeholder="问题标题...">
                 </div>
                 <div class="form-group">
-                    <label for="title">添加标签</label>
-                    <input type="text" class="form-control" id="tag"  name="tag" placeholder="添加标签，以逗号隔开...">
+                    <label for="title">问题补充 （必填，请参照右侧提示）</label><label class="warn2"></label>
+                    <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+                    <textarea name="description" th:text="${description}" id="description" col="30" row="50" class="form-control">
+                    </textarea>
                 </div>
-                <div class="container-fluid main ">
-                    <div class="row">
-                        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
-                            <div class="alert alert-danger col-lg-12 col-md-12 col-sm-12 col-xs-12"
-                                 th:text="${error}"
-                                 th:if="${error != null}">
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-                            <button type="submit" class="btn btn-success btn-publish ">
-                                发布
-                            </button>
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label for="title">添加标签</label><label class="warn3"></label>
+                    <input type="text" class="form-control" id="tag"  th:value="${tag}" name="tag" placeholder="添加标签，以逗号隔开...">
                 </div>
+                    <span   class="alert-success" role="alert" th:text="${msg}"></span>
+                    <span class="glyphicon glyphicon-hand-left" aria-hidden="true" th:if="${msg!=null}"></span>
+                <button type="submit" class="btn btn-success btn-publish ">提交</button>
             </form>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
@@ -85,7 +77,6 @@
             • 问题标题: 请用精简的语言描述您发布的问题，不超过25字 <br>
             • 问题补充: 详细补充您的问题内容，并确保问题描述清晰直观, 并提供一些相关的资料<br>
             • 选择标签: 选择一个或者多个合适的标签，用逗号隔开，每个标签不超过10个字<br>
-
         </div>
     </div>
 </div>

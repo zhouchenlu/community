@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" lang="">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>欢迎来到hardcat论坛</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title th:text="${sectionName}">个人中心</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/community.css"/>
@@ -14,11 +14,13 @@
 <div class="container-fluid main">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
-            <h2><span class="glyphicon glyphicon-list" aria-hidden="true"> 列表</span></h2><hr>
+            <h2><span class="glyphicon glyphicon-list" aria-hidden="true"
+                      th:text="*{sectionName != null}? *{sectionName} : '我的提问'">我的提问</span></h2>
+            <hr>
             <div class="media" th:each="que :${pageInfoDTO.questions}">
                 <div class="media-left">
-                    <a href="#" >
-                       <img class="media-object img-circle img-size-my" alt="头像" th:src="${que.user!=null}?${que.user.avatarUrl}:''" src="">
+                    <a href="#">
+                        <img class="media-object img-circle img-size-my" alt="头像" src="" th:src="${que.user.avatarUrl}">
                     </a>
                 </div>
                 <div class="media-body">
@@ -27,36 +29,38 @@
                     </h4>
                     <span th:text="${que.description}"></span><br/>
                     <p>
-                        <span class="text-desc">
-                        <span  th:text="${que.commentCount}">12</span>
-                        个评论 • <span th:text="${que.viewCount}">1754 </span>
-                        次浏览 • <span  th:text="${#calendars.format(que.gmtCreate,'yyyy-MM-dd HH:mm')}">2019-07-22 10:38</span>
-                        </span>
+                         <span class="text-desc">
+                         <span th:text="${que.commentCount}">12</span>
+                         个评论 • <span th:text="${que.viewCount}">1754 </span>
+                         次浏览 • <span
+                                 th:text="${#calendars.format(que.gmtCreate,'yyyy-MM-dd HH:mm')}">2019-07-22 10:38</span>
+                         </span>
                     </p>
                 </div>
             </div>
-            <nav aria-label="Page navigation" >
+            <nav aria-label="Page navigation">
                 <ul class="pagination pagination-sm">
                     <li th:if="${pageInfoDTO.hasFirst}">
-                        <a href="/?page=1" aria-label="Frist">
+                        <a href="/?page=1"
+                           th:href="@{'/profile/'+${section}(page=${1})}" aria-label="Frist">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
                     <li th:if="${pageInfoDTO.hasPrevious}">
-                        <a href="#" th:href="@{/(page= ${pageInfoDTO.page-1})}" aria-label="Previous">
+                        <a href="#" th:href="@{'/profile/'+${section}(page=${pageInfoDTO.page-1})}" aria-label="Previous">
                             <span aria-hidden="true">&lt;</span>
                         </a>
                     </li>
                     <li th:each="pa:${pageInfoDTO.pages}" th:class="${pageInfoDTO.page==pa}?'active':''">
-                        <a href="#" th:href="@{/(page=${pa})}" th:text="${pa}">1</a>
+                        <a href="#" th:href="@{'/profile/'+${section}(page=${pa})}" th:text="${pa}">1</a>
                     </li>
                     <li th:if="${pageInfoDTO.hasNext}">
-                        <a href="#" th:href="@{/(page=${pageInfoDTO.page+1})}" aria-label="Next">
+                        <a href="#" th:href="@{'/profile/'+${section}(page=${pageInfoDTO.page+1})}" aria-label="Next">
                             <span aria-hidden="true">&gt;</span>
                         </a>
                     </li>
                     <li th:if="${pageInfoDTO.hasEnd}">
-                        <a href="#" th:href="@{/(page=${pageInfoDTO.total})}" aria-label="End">
+                        <a href="#" th:href="@{'/profile/'+${section}(page=${pageInfoDTO.total})}" aria-label="End">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
@@ -64,10 +68,12 @@
             </nav>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-            <h3>热门3</h3>
-            • 问题标题: 请用精简的语言描述您发布的问题，不超过25字 <br>
-            • 问题补充: 详细补充您的问题内容，并确保问题描述清晰直观, 并提供一些相关的资料<br>
-            • 选择标签: 选择一个或者多个合适的标签，用逗号隔开，每个标签不超过10个字<br>
+            <div class="list-group mylist">
+                <a href="/profile/questions"
+                   th:class="${section=='questions'}?'list-group-item active':'list-group-item'"> 我的问题</a>
+                <a href="/profile/replies" th:class="${section=='replies'}?'list-group-item active':'list-group-item'">
+                    最新回复<span class="badge">14</span></a>
+            </div>
         </div>
     </div>
 </div>
