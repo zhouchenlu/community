@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <title>请登录</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/community.css"/>
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/bootstrap.js" type="application/javascript"></script>
+</head>
+<body>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <form  action="/lr" method="post" class="registerForm">
+            <div class="col-lg-2">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="username" th:value="${username}" id="username" placeholder="Enter username...">
+                </div><!-- /input-group -->
+            </div><!-- /.col-lg-6 -->
+            <div class="col-lg-5">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="password" th:value="${password}" id="password" placeholder="Enter password...">
+                    <span class="input-group-btn">
+                    <button class="btn btn-default re" type="submit">Login Or Register!</button>
+                    </span>
+                    <span   class="alert-success" role="alert" th:text="${msg}"></span>
+                    <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true" th:if="${msg!=null}"></span>
+                </div><!-- /input-group -->
+            </div><!-- /.col-lg-6 -->
+            </form>
+        </div><!-- /.row -->
+        <div>
+            <h3><span class="label label-default"><a href="https://github.com/login/oauth/authorize?client_id=Iv1.84e6066904412e29&
+                    redirect_uri=http://localhost:8887/callback&scope=user&state=1">GitHub Login </a></span></h3>
+        </div>
+    </div>
+</div>
+
+
+</body>

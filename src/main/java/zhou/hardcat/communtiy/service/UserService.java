@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import zhou.hardcat.communtiy.mapper.UserMapper;
 import zhou.hardcat.communtiy.model.User;
+
+import java.util.List;
+
 @Service
 public class UserService {
     @Autowired
@@ -19,5 +22,17 @@ public class UserService {
         }
         user.setGmtCreate(System.currentTimeMillis());
         return userMapper.insert(user);
+    }
+
+    public List<User> selectByUsername(String username) {
+        return userMapper.findByName(username);
+    }
+
+    public User login(String username, String password) {
+        return userMapper.findByNameAndAccountId(username,password);
+    }
+
+    public int register(User user) {
+      return userMapper.insert(user);
     }
 }
