@@ -10,10 +10,11 @@ public class PublishService {
     @Autowired
     private QuestionMapper questionMapper;
     public int modifiedOrCreate(Question question) {
-        if(question.getId()==null){
-            throw new CustomizeException("当前问题不存在,请核对!!");
+        Question dbQuestion = null;
+        if(question.getId()!=null){
+            dbQuestion  = questionMapper.selectById(question.getId());
         }
-        Question dbQuestion  = questionMapper.selectById(question.getId());
+
         if(dbQuestion!=null){
             dbQuestion.setTitle(question.getTitle());
             dbQuestion.setTag(question.getTag());
