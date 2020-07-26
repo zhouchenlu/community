@@ -1,9 +1,12 @@
 package zhou.hardcat.communtiy.datatransferobject;
 
 import lombok.Data;
+import zhou.hardcat.communtiy.model.Comment;
 import zhou.hardcat.communtiy.model.User;
-@Data
-public class QuestionDTO {
+
+import java.util.List;
+
+@Data public class QuestionDTO {
     private Integer id;
     private String title;
     private String description;
@@ -15,4 +18,5 @@ public class QuestionDTO {
     private Integer likeCount;
     private String tag;
     private Integer creator;
+    private List<Comment> comment;
 }

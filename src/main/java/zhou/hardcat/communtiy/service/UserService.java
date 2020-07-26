@@ -7,13 +7,12 @@ import zhou.hardcat.communtiy.model.User;
 
 import java.util.List;
 
-@Service
-public class UserService {
-    @Autowired
-    private UserMapper userMapper;
+@Service public class UserService {
+    @Autowired private UserMapper userMapper;
+
     public int updateOrInsert(User user) {
-        User dbUser=userMapper.findByAccontId(user.getAccountId());
-        if(dbUser!=null){
+        User dbUser = userMapper.findByAccontId(user.getAccountId());
+        if (dbUser != null) {
             dbUser.setGmtModified(System.currentTimeMillis());
             dbUser.setAvatarUrl(user.getAvatarUrl());
             dbUser.setToken(user.getToken());
@@ -29,10 +28,12 @@ public class UserService {
     }
 
     public User login(String username, String password) {
-        return userMapper.findByNameAndAccountId(username,password);
+        return userMapper.findByNameAndAccountId(username, password);
     }
 
     public int register(User user) {
-      return userMapper.insert(user);
+        String randomNum = String.valueOf(System.currentTimeMillis()).substring(5);
+        user.setAvatarUrl("https://avatars1.githubusercontent.com/u/" + randomNum);
+        return userMapper.insert(user);
     }
 }

@@ -1,10 +1,8 @@
 package zhou.hardcat.communtiy.model;
 
-
 import lombok.Data;
 
-@Data
-public class Question {
+@Data public class Question {
     private Integer id;
     private String title;
     private String description;

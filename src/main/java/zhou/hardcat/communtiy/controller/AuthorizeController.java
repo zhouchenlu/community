@@ -3,13 +3,13 @@ package zhou.hardcat.communtiy.controller;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import zhou.hardcat.communtiy.datatransferobject.AccessTokenDTO;
 import zhou.hardcat.communtiy.datatransferobject.GithubUser;
-import zhou.hardcat.communtiy.mapper.UserMapper;
 import zhou.hardcat.communtiy.model.User;
 import zhou.hardcat.communtiy.provider.GithubProvider;
 import zhou.hardcat.communtiy.service.UserService;
@@ -22,25 +22,16 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.UUID;
 
-@Controller
-public class AuthorizeController {
-    @Resource
-    private GithubProvider githubProvider;
-    @Value("${github.client.id}")
-    private String clientId;
-    @Value("${github.client.secret}")
-    private String secret;
-    @Value("${github.redirect.uri}")
-    private String redirectUri;
-    @Resource
-    private UserService userService;
+@Controller public class AuthorizeController {
+    @Resource private GithubProvider githubProvider;
+    @Value("${github.client.id}") private String clientId;
+    @Value("${github.client.secret}") private String secret;
+    @Value("${github.redirect.uri}") private String redirectUri;
+    @Resource private UserService userService;
 
     @GetMapping("/callback")
-    public String callback(@RequestParam(name = "code") String code,
-                           @RequestParam(name = "state") String state,
-                           HttpServletResponse response,
-                           HttpSession session,
-                           Model model) {
+    public String callback(@RequestParam(name = "code") String code, @RequestParam(name = "state") String state,
+        HttpServletResponse response, HttpSession session, Model model) {
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         accessTokenDTO.setClient_id(clientId);
         accessTokenDTO.setClient_secret(secret);
@@ -71,8 +62,7 @@ public class AuthorizeController {
         return "publish";
     }
 
-    @RequestMapping("/logout")
-    public String logout(HttpServletResponse response, HttpServletRequest request) {
+    @RequestMapping("/logout") public String logout(HttpServletResponse response, HttpServletRequest request) {
         request.getSession().removeAttribute("user");
         Cookie cookie = new Cookie("token", null);
         cookie.setMaxAge(0);
@@ -80,16 +70,17 @@ public class AuthorizeController {
         return "redirect:/";
     }
 
-    @GetMapping("/toLogin")
-    public String login() {
+    @GetMapping("/toLogin") public String login() {
         return "login";
     }
 
     @PostMapping("/lr")
-    public String register(HttpServletRequest request, Model model,
-                           @RequestParam(value = "username") String username,
-                           @RequestParam("password")String password,
-                           HttpSession session) {
+    public String register(HttpServletRequest request, Model model, @RequestParam(value = "username") String username,
+        @RequestParam("password") String password, HttpSession session) {
+        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
+            model.addAttribute("msg", "请输入有效内容！！");
+            return "login";
+        }
         List<User> users = userService.selectByUsername(username);
         //登录
         if (users.size() != 0) {
